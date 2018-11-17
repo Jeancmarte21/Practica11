@@ -43,46 +43,6 @@ public class RentController {
         return "rentals";
     }
 
-
-
-
-
-
-    @RequestMapping(value = "/registrar", method = RequestMethod.POST)
-    public String crearAlquilerPOST(
-            @RequestParam(value = "cliente", required = false) long cliente,
-            @RequestParam(value = "fechaEntrega", required = false) String fechaEntrega,
-            @RequestParam(value = "equipos", required = false) List<Long> equipos) throws ParseException {
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date dateFechaEntrega = formatter.parse(fechaEntrega);
-
-     Custom cliente = new Custom();
-        List<Equip> equipList = new ArrayList<>();
-
-        for (Long equip : equipos) {
-            Equip equipoObj = servicioEquipo.getEquipoPorID(equip);
-            equipoObj.setExistencia(equipoObj.getExistencia() - 1);
-            servicioEquipo.crearEquipo(equipoObj);
-
-            equipoList.add(equipoObj);
-        }
-
-        servicioAlquiler.crearAlquiler(new Rent(dateFechaEntrega, cliente, equipList, equipList, 0));
-
-        return "redirect:/alquiler/";
-    }
-
-
-
-
-
-
-
-
-
-
     @Secured({"Administrador"})
     @RequestMapping(value = "/registrar/alquiler", method = RequestMethod.POST)
     public String post(@RequestParam(name = "cliente") long cliente,
